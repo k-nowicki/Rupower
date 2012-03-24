@@ -14,7 +14,7 @@ module Rupower
   end
 
   class Rupower
-    def initialize( params = {})
+    def initialize( params = {refresh_always:true})
       @refresh_always = params[:refresh_always]
       refresh
     end
@@ -25,13 +25,15 @@ module Rupower
     end
 
     def method_missing(meth,*args)
-      p meth
-      p args
-    rescue NoMethodError
-      p meth
+      res = get_all[sym_gsub(meth,'_','-')] || get_all[sym_gsub(meth,'_',' ')]
+      raise NoMethodError, "undefined method #{meth} for Rupower::Battery" if res.class == NilClass
+      res
     end
 
     private
+      def sym_gsub(sym, before, after)
+        sym.to_s.gsub(before,after).to_sym
+      end
 
       def get_hash
         @state.each_line.inject({}) do |hash, line|
@@ -45,10 +47,11 @@ module Rupower
       end
 
       def typize( value )
+        res = value
         res = value[/^yes$/] ? true : false if value[/^(yes|no)$/]
         res = to_number(value) if number?(value)
         res = to_time(value) if time?(value)
-        res || value
+        res
       end
 
       def time?(value)
