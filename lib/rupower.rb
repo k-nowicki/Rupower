@@ -13,23 +13,16 @@ module Rupower
     VALUABLE =  Regexp.new( /\w+:\s+\S+/ )
   end
 
-  class Rupower
+  class PowerDevice
     def initialize( params = {refresh_always:true} )
       @refresh_always = params[:refresh_always]
+      @command = params[:command] || Command.new
       refresh
     end
 
     def get_all
       refresh if @refresh_always
       get_hash
-    end
-
-    def method_missing( meth, *args )
-      name_v1 = sym_gsub( meth, '_', '-' )
-      name_v2 = sym_gsub( meth, '_', ' ' )
-      res = get_all[ name_v1 ] || get_all[ name_v2 ]
-      raise NoMethodError, "undefined method #{meth} for Rupower::Battery" if res.class == NilClass
-      res
     end
 
     private
@@ -52,7 +45,7 @@ module Rupower
         res = value
         res = value[/^yes$/] ? true : false if value[/^(yes|no)$/]
         res = to_number( value ) if number?( value )
-        res = to_time( value ) if time?( value )
+        res = to_datetime( value ) if time?( value )
         res
       end
 
@@ -60,8 +53,8 @@ module Rupower
         value.match( Parser::TIME )
       end
 
-      def to_time( value )
-        DateTime.parse( value ).to_time
+      def to_datetime( value )
+        DateTime.parse( value )
       end
 
       def number?( value )
@@ -73,9 +66,23 @@ module Rupower
       end
   end
 
-  class Battery < Rupower
-    def refresh
-      @state = Command.new.battery
+  class Battery < PowerDevice
+    METHODS = [:native_path, :vendor, :model, :serial, :power_supply, :updated,
+               :has_history, :has_statistics, :present, :rechargeable, :state,
+               :energy, :energy_empty, :energy_full, :energy_full_design,
+               :energy_rate, :voltage, :percentage, :capacity, :technology]
+
+    METHODS.each do |method|
+      define_method method do
+        p method
+        name_v1 = sym_gsub( method, '_', '-' )
+        name_v2 = sym_gsub( method, '_', ' ' )
+        get_all[ name_v1 ] || get_all[ name_v2 ]
+      end
+    end
+
+    def refresh()
+      @state = @command.battery
     end
 
     def charging?
@@ -83,12 +90,22 @@ module Rupower
     end
   end
 
-  class LineAc < Rupower
+  class LineAc < PowerDevice
+    METHODS = [:native_path, :power_supply, :updated, :has_history, :has_statistics, :online]
+
+    METHODS.each do |method|
+      define_method method do
+        p method
+        name_v1 = sym_gsub( method, '_', '-' )
+        name_v2 = sym_gsub( method, '_', ' ' )
+        get_all[ name_v1 ] || get_all[ name_v2 ]
+      end
+    end
+
     def refresh
-      @state = Command.new.line_ac
+      @state = @command.line_ac
     end
   end
-
 
   class Command
     def battery

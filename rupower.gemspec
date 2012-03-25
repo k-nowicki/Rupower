@@ -11,8 +11,7 @@ Gem::Specification.new do |s|
   s.summary     = %q{Rupower is UPower (http://upower.freedesktop.org) interface for Ruby.}
   s.description = %q{Rupower is UPower (http://upower.freedesktop.org) interface for Ruby, working for Battery and AC supply.
 The main use case is to get all information providing by appropriate UPower service as parsed, hard typing hash.}
-
-  s.rubyforge_project = "rupower"
+  s.required_ruby_version = '>= 1.9.2'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
