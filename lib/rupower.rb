@@ -8,7 +8,7 @@ module Rupower
     TIME =      Regexp.new(/\s+\([\s\w]*\)/)
     NUMBER =    Regexp.new(/\A[+-]?\d+?(\.\d+)?\Z/)
     UNITS =     Regexp.new(/(( .{1,2})|(%))$/)
-    KEY =       Regexp.new(/\s*:\s+[\s\S]+$/)
+    AFTER_KEY = Regexp.new(/\s*:\s+[\s\S]+$/)
     PARAGRAPH = Regexp.new(/^\s+/)
     VALUABLE =  Regexp.new(/\w+:\s+\S+/)
   end
@@ -37,13 +37,13 @@ module Rupower
 
       def get_hash
         @state.each_line.inject({}) do |hash, line|
-          key = line.gsub(Parser::KEY,"").gsub(Parser::PARAGRAPH,"").to_sym
+          key = line.gsub(Parser::AFTER_KEY,"").gsub(Parser::PARAGRAPH,"").to_sym
           line[Parser::VALUABLE] ? hash.merge(key => get_value( line )) : hash
         end
       end
 
       def get_value( line )
-        typize (line[Parser::VALUE].gsub(Parser::UNITS,"") )
+        typize( line[Parser::VALUE].gsub(Parser::UNITS,"") )
       end
 
       def typize( value )
