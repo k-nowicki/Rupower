@@ -53,14 +53,13 @@ module Rupower
 
     METHODS.each do |method|
       define_method method do
-        p method
         name_v1 = sym_gsub( method, '_', '-' )
         name_v2 = sym_gsub( method, '_', ' ' )
         get_all[ name_v1 ] || get_all[ name_v2 ]
       end
     end
 
-    def refresh()
+    def refresh
       @state = @command.battery
     end
 
@@ -78,7 +77,6 @@ module Rupower
 
     METHODS.each do |method|
       define_method method do
-        p method
         name_v1 = sym_gsub( method, '_', '-' )
         name_v2 = sym_gsub( method, '_', ' ' )
         get_all[ name_v1 ] || get_all[ name_v2 ]
