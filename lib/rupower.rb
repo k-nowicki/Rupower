@@ -4,13 +4,8 @@ require_relative "rupower/version"
 module Rupower
 
   module Parser
-    VALUE =     Regexp.new( /(([0-9]{1,5}([.][0-9]{1,5}){0,1}).*|((\S)+))$/ )
     TIME =      Regexp.new( /\s+\([\s\w]*\)/ )
-    NUMBER =    Regexp.new( /\A[+-]?\d+?(\.\d+)?\Z/ )
-    UNITS =     Regexp.new( /(( .{1,2})|(%))$/ )
-    AFTER_KEY = Regexp.new( /\s*:\s+[\s\S]+$/ )
-    PARAGRAPH = Regexp.new( /^\s+/ )
-    VALUABLE =  Regexp.new( /\w+:\s+\S+/ )
+    NUMBER =    Regexp.new(/^\d+[.]?\d*(|[%]|\s+\w+)$/)  #( /\A[+-]?\d+?(\.\d+)?\Z/ )
   end
 
   class PowerDevice
@@ -26,44 +21,28 @@ module Rupower
     end
 
     private
-      def sym_gsub( sym, before, after )
-        sym.to_s.gsub( before, after ).to_sym
-      end
-
       def get_hash
-        @state.each_line.inject( {} ) do |hash, line|
-          key = line.gsub( Parser::AFTER_KEY, "" ).gsub( Parser::PARAGRAPH, "" ).to_sym
-          line[Parser::VALUABLE] ? hash.merge( key => get_value( line ) ) : hash
-        end
-      end
-
-      def get_value( line )
-        typize( line[Parser::VALUE].gsub( Parser::UNITS, "" ) )
+        state = @state.strip.split( /$/ ).map( &:strip ).reject{ |r| !r.include?( ':' ) }
+        state_key_value_array = state.map{ |r| r.split( ':', 2 ) }.flatten.map( &:strip )
+        symbolize_hash( Hash[*state_key_value_array.map{ |value| typize(value) }] )
       end
 
       def typize( value )
         res = value
         res = value[/^yes$/] ? true : false if value[/^(yes|no)$/]
-        res = to_number( value ) if number?( value )
-        res = to_datetime( value ) if time?( value )
+        res = value.to_f == value.to_i ? value.to_i : value.to_f  if value[Parser::NUMBER ]
+        res = DateTime.parse( value ) if value.match( Parser::TIME )
         res
       end
 
-      def time?( value )
-        value.match( Parser::TIME )
+      def symbolize_hash(hash)
+        hash.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
       end
 
-      def to_datetime( value )
-        DateTime.parse( value )
+      def sym_gsub( sym, before, after )
+        sym.to_s.gsub( before, after ).to_sym
       end
 
-      def number?( value )
-        value.match( Parser::NUMBER ) == nil ? false : true
-      end
-
-      def to_number( value )
-        value.to_f == value.to_i ? value.to_i : value.to_f
-      end
   end
 
   class Battery < PowerDevice
@@ -86,7 +65,11 @@ module Rupower
     end
 
     def charging?
-      get_all[:state]["discharging"] ? false : true
+      get_all[:state] == "charging"
+    end
+
+    def fully_charged?
+      get_all[:state] == "fully-charged"
     end
   end
 

@@ -33,7 +33,7 @@ class RupowerBatteryTest < Test::Unit::TestCase
   end
 
   def test_updated_returns_correct_value
-    assert_equal( DateTime.parse("Sun Mar 25 20:12:15 2012"), @battery.updated )
+    assert_equal( DateTime.parse("Sun Mar 25 22:56:15 2012"), @battery.updated )
   end
 
   def test_has_history_returns_correct_value
@@ -59,7 +59,6 @@ class RupowerBatteryTest < Test::Unit::TestCase
   def test_energy_returns_correct_value
     assert_equal( 62.9532, @battery.energy )
   end
-
 
   def test_energy_empty_returns_correct_value
     assert_equal( 0, @battery.energy_empty )
@@ -91,6 +90,14 @@ class RupowerBatteryTest < Test::Unit::TestCase
 
   def test_technology_returns_correct_value
     assert_equal( "lithium-ion", @battery.technology )
+  end
+
+  def test_charging_returns_correct_value
+    assert_equal( false, @battery.charging? )
+  end
+
+  def test_fully_charged_returns_correct_value
+    assert_equal( true, @battery.fully_charged? )
   end
 
 
