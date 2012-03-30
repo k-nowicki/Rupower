@@ -1,6 +1,6 @@
 # Rupower
 
-Ruby interface to [UPower] tool available by default on Ubuntu and Debian distros.
+Ruby interface to [UPower].[Device] tool available by default on Ubuntu and Debian distros.
 
 ## Example
 
@@ -12,7 +12,7 @@ Ruby interface to [UPower] tool available by default on Ubuntu and Debian distro
     capacity:               # =>   100      # [%]
     technology:             # =>   'lithium-ion'
 
-See the UPower documentation for full list of parameters that can be used as methods, or look at the
+See the UPower [documentation] for full list of properties that can be used as methods, or look at the
 acceptance tests.
 
 ## Installation
@@ -38,3 +38,5 @@ Then run:
 Released under the MIT license. Copyright (C) 2012 Karol Nowicki
 
 [UPower]: http://upower.freedesktop.org
+[Device]: http://upower.freedesktop.org/docs/Device.html
+[documentation]: http://upower.freedesktop.org/docs/Device.html#Device.properties
