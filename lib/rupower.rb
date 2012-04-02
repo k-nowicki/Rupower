@@ -4,7 +4,7 @@ require_relative "rupower/version"
 module Rupower
 
   module Parser
-    TIME =      Regexp.new( /\s+\([\s\w]*\)/ )
+    TIME =      Regexp.new( /(\d{2}:){2}\d{2}\s\d{4}/ )
     NUMBER =    Regexp.new(/^\d+[.]?\d*(|[%]|\s+\w+)$/)  #( /\A[+-]?\d+?(\.\d+)?\Z/ )
   end
 
