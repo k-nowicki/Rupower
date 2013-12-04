@@ -22,7 +22,7 @@ class RupowerLineAcTest < Test::Unit::TestCase
   end
 
   def test_updated_returns_correct_value
-    assert_equal( DateTime.parse("Sat Mar 24 23:47:24 2012"), @line_ac.updated )
+    assert_equal( DateTime.parse("Wed 04 Dec 2013 02:06:26 AM CET"), @line_ac.updated )
   end
 
   def test_has_history_returns_correct_value

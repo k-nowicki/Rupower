@@ -4,8 +4,9 @@ require_relative "rupower/version"
 module Rupower
 
   module Parser
-    TIME =      Regexp.new( /(\d{2}:){2}\d{2}\s\d{4}/ )
-    NUMBER =    Regexp.new(/^\d+[.]?\d*(|[%]|\s+\w+)$/)  #( /\A[+-]?\d+?(\.\d+)?\Z/ )
+    TIME   = Regexp.new(/\d{4}\s(\d{2}:){2}\d{2}\s/)
+    ETA    = Regexp.new(/(\d+\.\d)\s(hour|minute)/)
+    NUMBER = Regexp.new(/^\d+[.]?\d*(|[%]|\s+\w+)$/)  #( /\A[+-]?\d+?(\.\d+)?\Z/ )
   end
 
   class PowerDevice
@@ -32,6 +33,7 @@ module Rupower
         res = value[/^yes$/] ? true : false if value[/^(yes|no)$/]
         res = value.to_f == value.to_i ? value.to_i : value.to_f  if value[Parser::NUMBER ]
         res = DateTime.parse( value ) if value.match( Parser::TIME )
+        res = value if value[Parser::ETA]
         res
       end
 
@@ -49,7 +51,8 @@ module Rupower
     METHODS = [:native_path, :vendor, :model, :serial, :power_supply, :updated,
                :has_history, :has_statistics, :present, :rechargeable, :state,
                :energy, :energy_empty, :energy_full, :energy_full_design,
-               :energy_rate, :voltage, :percentage, :capacity, :technology]
+               :energy_rate, :voltage, :percentage, :capacity, :technology,
+               :time_to_empty, :time_to_full]
 
     METHODS.each do |method|
       define_method method do
