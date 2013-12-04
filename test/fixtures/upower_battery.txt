@@ -3,7 +3,7 @@
   model:                42T4795
   serial:               6804
   power supply:         yes
-  updated:              Sun Mar 25 22:56:15 2012 (22 seconds ago)
+  updated:              Wed 04 Dec 2013 02:06:26 AM CET (0 seconds ago)
   has history:          yes
   has statistics:       yes
   battery

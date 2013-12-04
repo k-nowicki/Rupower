@@ -1,6 +1,6 @@
   native-path:          /sys/devices/LNXSYSTM:00/device:00/PNP0A08:00/device:09/PNP0C09:00/ACPI0003:00/power_supply/AC
   power supply:         yes
-  updated:              Sat Mar 24 23:47:24 2012 (79753 seconds ago)
+  updated:              Wed 04 Dec 2013 02:06:26 AM CET (0 seconds ago)
   has history:          no
   has statistics:       no
   line-power

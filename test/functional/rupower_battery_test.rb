@@ -33,7 +33,7 @@ class RupowerBatteryTest < Test::Unit::TestCase
   end
 
   def test_updated_returns_correct_value
-    assert_equal( DateTime.parse("Sun Mar 25 22:56:15 2012"), @battery.updated )
+    assert_equal( DateTime.parse("Wed 04 Dec 2013 02:06:26 AM CET"), @battery.updated )
   end
 
   def test_has_history_returns_correct_value
