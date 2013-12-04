@@ -23,7 +23,7 @@ class RupowerTest < Test::Unit::TestCase
     assert_instance_of( Float,  @battery.voltage )
     assert_instance_of( String, @battery.vendor )
     assert_instance_of( String, @battery.native_path )
-    assert_instance_of( DateTime,   @battery.updated )
+    assert_instance_of( DateTime, @battery.updated )
   end
 
   def test_line_ac_get_methods_returns_correct_values

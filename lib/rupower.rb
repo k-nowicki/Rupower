@@ -4,13 +4,13 @@ require_relative "rupower/version"
 module Rupower
 
   module Parser
-    TIME   = Regexp.new(/\d{4}\s(\d{2}:){2}\d{2}\s/)
+    TIME   = Regexp.new(/\d{4},?\s(\d{2}:){2}\d{2}\s/)
     ETA    = Regexp.new(/(\d+\.\d)\s(hour|minute)/)
-    NUMBER = Regexp.new(/^\d+[.]?\d*(|[%]|\s+\w+)$/)  #( /\A[+-]?\d+?(\.\d+)?\Z/ )
+    NUMBER = Regexp.new(/^\d+[.,]?\d*(|[%]|\s+\w+)$/)  #( /\A[+-]?\d+?(\.\d+)?\Z/ )
   end
 
   class PowerDevice
-    def initialize( params = {refresh_always:true} )
+    def initialize( params = {refresh_always: true} )
       @refresh_always = params[:refresh_always]
       @command = params[:command] || Command.new
       refresh
@@ -31,7 +31,10 @@ module Rupower
       def typize( value )
         res = value
         res = value[/^yes$/] ? true : false if value[/^(yes|no)$/]
-        res = value.to_f == value.to_i ? value.to_i : value.to_f  if value[Parser::NUMBER ]
+        if value[Parser::NUMBER ]
+          value.gsub!(',','.')
+          res = value.to_f == value.to_i ? value.to_i : value.to_f
+        end
         res = DateTime.parse( value ) if value.match( Parser::TIME )
         res = value if value[Parser::ETA]
         res

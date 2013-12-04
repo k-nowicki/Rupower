@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.name        = "rupower"
   s.version     = Rupower::VERSION
   s.authors     = ["k-nowicki"]
-  s.email       = ["karol@knowicki.pl"]
+  s.email       = ["now.nowicki@gmail.com"]
   s.homepage    = "https://github.com/k-nowicki/rupower"
   s.summary     = %q{Rupower is UPower (http://upower.freedesktop.org) interface for Ruby.}
   s.description = %q{Rupower is UPower (http://upower.freedesktop.org) interface for Ruby, working for Battery and AC supply.
